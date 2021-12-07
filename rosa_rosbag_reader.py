@@ -32,10 +32,7 @@ def parseArgs():
 
 
 def writeAttentionToCSV(bag, topic, file=""):
-    if file == " ":
-        file = topic
-
-    with open('test.csv', mode='w') as data_file:
+    with open(file +'.csv', mode='w') as data_file:
         data_writer = csv.writer(
             data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         data_writer.writerow(['timestamp', 'data'])
@@ -43,13 +40,11 @@ def writeAttentionToCSV(bag, topic, file=""):
         # Get all message on the /joint states topic
         for topic, msg, t in bag.read_messages(topics=[topic]):
             data_writer.writerow([t, msg.data])
+    return file
 
 
 def writeAttention_VisualToCSV(bag, topic, file=""):
-    if file == " ":
-        file = topic
-
-    with open('test.csv', mode='w') as data_file:
+    with open(file +'.csv', mode='w') as data_file:
         data_writer = csv.writer(
             data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         data_writer.writerow(['timestamp', 'id', 'visual'])
@@ -57,13 +52,11 @@ def writeAttention_VisualToCSV(bag, topic, file=""):
         # Get all message on the /joint states topic
         for topic, msg, t in bag.read_messages(topics=[topic]):
             data_writer.writerow([t, msg.id, msg.visual])
+    return file
 
 
 def writeBorderless_commandsToCSV(bag, topic, file=""):
-    if file == " ":
-        file = topic
-
-    with open('test.csv', mode='w') as data_file:
+    with open(file +'.csv', mode='w') as data_file:
         data_writer = csv.writer(
             data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         data_writer.writerow(['timestamp', 'command', 'text', 'x',
@@ -74,12 +67,11 @@ def writeBorderless_commandsToCSV(bag, topic, file=""):
             # Only write to CSV if the message is for our robot
             data_writer.writerow([t, msg.command, msg.text, msg.x, msg.y, msg.size, msg.color_fill.r, msg.color_fill.g, msg.color_fill.b,
                                  msg.color_fill.a, msg.color_stroke.r, msg.color_stroke.g, msg.color_stroke.b, msg.color_stroke.a])
+    return file
+
 
 def writeReco_sttToCSV(bag, topic, file=""):
-    if file == " ":
-        file = topic
-
-    with open('test.csv', mode='w') as data_file:
+    with open(file +'.csv', mode='w') as data_file:
         data_writer = csv.writer(
             data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         data_writer.writerow(['timestamp', 'data'])
@@ -88,12 +80,11 @@ def writeReco_sttToCSV(bag, topic, file=""):
         for topic, msg, t in bag.read_messages(topics=[topic]):
             # Only write to CSV if the message is for our robot
             data_writer.writerow([t, msg.data,])
+    return file
+
 
 def writeActiveBodyToCSV(bag, topic, file=""):
-    if file == " ":
-        file = topic
-
-    with open('test.csv', mode='w') as data_file:
+    with open(file +'.csv', mode='w') as data_file:
         data_writer = csv.writer(
             data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
        
@@ -119,27 +110,29 @@ def writeActiveBodyToCSV(bag, topic, file=""):
                 data_row.append(JoinType.Z)
                 data_row.append(JoinType.TrackingState)
             data_writer.writerow(data_row)
+    return file
 
             
 def writeTopicToCSV(bag, topic, file=""):
-    if file == " ":
-        file = topic
-
+    if file == "":
+        _, file = os.path.split(topic)
+      
+    print(file)
     if topic == '/WS1/attention':
-        writeAttentionToCSV(bag, topic, file)
+        file_name = writeAttentionToCSV(bag, topic, file)
     elif topic == '/WS1/attention_visual':
-        writeAttention_VisualToCSV(bag, topic, file)
+        file_name = writeAttention_VisualToCSV(bag, topic, file)
     elif topic == '/WS1/borderless/commands':
-        writeBorderless_commandsToCSV(bag, topic, file)
+        file_name = writeBorderless_commandsToCSV(bag, topic, file)
     elif topic == '/WS1/reco_stt':
-        writeReco_sttToCSV(bag, topic, file)
+        file_name = writeReco_sttToCSV(bag, topic, file)
     elif topic == '/WS1/activebody':
-        writeActiveBodyToCSV(bag, topic, file)
+        file_name = writeActiveBodyToCSV(bag, topic, file)
 
     else: raise RuntimeError("Topic not supported for CSV export")
   
 
-    print("Finished creating csv file!")
+    print("Finished creating csv file! Saved to >>{}.csv<<.".format(file_name))
 
 
 def printMsgsInBagFile(bag, topic):

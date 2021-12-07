@@ -33,7 +33,7 @@ python rosa_rosbag_reader.py --bag result.bag --topic /WS1/attention --print
 
 ## Write topic to CSV
 ```sh
-python rosa_rosbag_reader.py --bag result.bag --topic /WS1/attention --export
+python rosa_rosbag_reader.py --bag result.bag --topic /WS1/attention --export #(optional --export_name) for defining the target file name.
 ```
 
 ## Supported topics for export:
