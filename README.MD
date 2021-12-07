@@ -1,5 +1,5 @@
 
-## Fix ros message defintion inside rosbags
+## Fix ros message definition inside rosbags
 
 ```
 python fix_bag_msg_def.py --inbag input.bag --outbag output.bag
