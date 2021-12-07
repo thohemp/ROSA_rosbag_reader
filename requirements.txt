@@ -1,0 +1,3 @@
+rosbag==1.14.10
+PyYAML==5.4.1
+roslib==1.14.9
