@@ -135,7 +135,8 @@ def writeTopicToCSV(bag, topic, file="", suppress_error = False):
         print("Finished creating csv file! Saved to >>{}.csv<<.".format(file_name))
 
 def exportAllTopicsToCSV(bag):
-    for topic in ROSA_TOPICS:
+    topics = bag.get_type_and_topic_info()[1].keys()
+    for topic in topics:
         writeTopicToCSV(bag, topic, suppress_error=True)
 
 
