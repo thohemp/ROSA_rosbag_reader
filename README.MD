@@ -2,7 +2,7 @@
 ## Fix ros message definition inside rosbags
 
 ```
-python fix_bag_msg_def.py --inbag input.bag --outbag output.bag
+python --use-local-defs fix_bag_msg_def.py S5/2021-10-22-11-36-40.bag result.bag
 ```
 
 
