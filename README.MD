@@ -36,6 +36,11 @@ python rosa_rosbag_reader.py --bag result.bag --topic /WS1/attention --print
 python rosa_rosbag_reader.py --bag result.bag --topic /WS1/attention --export #(optional --export_name) for defining the target file name.
 ```
 
+## Export all known topic to CSV
+```sh
+python rosa_rosbag_reader.py --bag result.bag --export_all.
+```
+
 ## Supported topics for export:
 - /WS1/attention
 - /WS1/attention_visual

@@ -15,6 +15,7 @@ import textwrap
 import argparse
 import csv
 
+ROSA_TOPICS = ['/WS1/attention','/WS1/attention_visual', '/WS1/borderless/commands', '/WS1/reco_stt','/WS1/activebody' ]
 
 def parseArgs():
     parser = argparse.ArgumentParser()
@@ -26,7 +27,7 @@ def parseArgs():
     parser.add_argument('--print', action='store_true')
     parser.add_argument('--export', action='store_true')
     parser.add_argument('--export_name', default='')
-
+    parser.add_argument('--export_all', dest='export_all', action='store_true')
     args = parser.parse_args()
     return args
 
@@ -113,11 +114,10 @@ def writeActiveBodyToCSV(bag, topic, file=""):
     return file
 
             
-def writeTopicToCSV(bag, topic, file=""):
+def writeTopicToCSV(bag, topic, file="", suppress_error = False):
     if file == "":
         _, file = os.path.split(topic)
-      
-    print(file)
+    file_name = ''  
     if topic == '/WS1/attention':
         file_name = writeAttentionToCSV(bag, topic, file)
     elif topic == '/WS1/attention_visual':
@@ -128,11 +128,15 @@ def writeTopicToCSV(bag, topic, file=""):
         file_name = writeReco_sttToCSV(bag, topic, file)
     elif topic == '/WS1/activebody':
         file_name = writeActiveBodyToCSV(bag, topic, file)
-
-    else: raise RuntimeError("Topic not supported for CSV export")
+    else: 
+        if not suppress_error: raise RuntimeError("Topic not supported for CSV export")
   
+    if not file_name == '':
+        print("Finished creating csv file! Saved to >>{}.csv<<.".format(file_name))
 
-    print("Finished creating csv file! Saved to >>{}.csv<<.".format(file_name))
+def exportAllTopicsToCSV(bag):
+    for topic in ROSA_TOPICS:
+        writeTopicToCSV(bag, topic, suppress_error=True)
 
 
 def printMsgsInBagFile(bag, topic):
@@ -184,6 +188,7 @@ if __name__ == '__main__':
     info = args.info
     export = args.export
     export_name = args.export_name
+    export_all = args.export_all
 
     bag = rosbag.Bag(bag, 'r')
     if info:
@@ -195,6 +200,9 @@ if __name__ == '__main__':
 
     if export:
         writeTopicToCSV(bag, topic, export_name)
+    
+    if export_all:
+        exportAllTopicsToCSV(bag)
 
     bag.close()
     # printArgs(args) # for debugging
